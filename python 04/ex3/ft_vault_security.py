@@ -1,28 +1,38 @@
-def secure_vault_operations() -> None:
-    print("=== CYBER ARCHIVES - VAULT SECURITY SYSTEM ===")
-    print("Initiating secure vault access...")
-    print("Vault connection established with failsafe protocols\n")
-
-    with open("classified_data.txt", "w") as prep_file:
-        prep_file.write("[CLASSIFIED] Quantum encryption keys recovered\n")
-        prep_file.write("[CLASSIFIED] Archive integrity: 100%\n")
-
-    print("SECURE EXTRACTION:")
+def secure_archive(filename: str, action: str = "read",
+                   content: str = "") -> tuple[bool, str]:
     try:
-        with open("classified_data.txt", "r") as vault_in:
-            data = vault_in.read()
-            print(data)
-    except FileNotFoundError:
-        print("Error: file not found!")
+        if action == "read":
+            with open(filename, "r") as file:
+                return True, file.read()
+        elif action == "write":
+            with open(filename, "w") as file:
+                file.write(content)
+                return True, "Content successfully written to file"
 
-    print("SECURE PRESERVATION:")
-    with open("security_protocols.txt", "w") as vault_out:
-        vault_out.write("[CLASSIFIED] New security protocols archived\n")
-        print("[CLASSIFIED] New security protocols archived")
-        print("Vault automatically sealed upon completion")
-
-    print("\nAll vault operations completed with maximum security.")
+        return False, "Unknown action"
+    except Exception as e:
+        return False, str(e)
 
 
 if __name__ == "__main__":
-    secure_vault_operations()
+    print("=== Cyber Archives Security ===")
+
+    print("Using 'secure_archive' to read from a nonexistent file:")
+    print(secure_archive("/not/existing/file", "read"))
+
+    print("Using 'secure_archive' to read from an inaccessible file:")
+    print(secure_archive("/etc/master.passwd", "read"))
+
+    test_content = ("[FRAGMENT 001] Digital preservation"
+                    " protocols established 2087\n"
+                    " [FRAGMENT 002] Knowledge must\n"
+                    "survive the entropy wars\n"
+                    " [FRAGMENT 003] Every byte saved"
+                    " is a victory against oblivion\n")
+    secure_archive("regular_file.txt", "write", test_content)
+
+    print("Using 'secure_archive' to read from a regular file:")
+    print(secure_archive("regular_file.txt", "read"))
+
+    print("Using 'secure_archive' to write previous content to a new file:")
+    print(secure_archive("new_file.txt", "write", test_content))
